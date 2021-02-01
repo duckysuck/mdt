@@ -1,12 +1,15 @@
 .content {
     position: absolute;
     border-radius: 5px;
-    background-color: #011b37;
     width: 75%;
     height: 80%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    background-blend-mode: darken;
+    background: repeating-linear-gradient(180deg, rgba(0,0,0, 0.0),rgba(0,0,0, 0.05) 4px, rgba(0,0,0, 0) 4px,rgba(0,0,0, 0.05) 4px), #011b37;
+    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.2) inset, 1px 1px 6px 1px rgba(0,0,0,0.2);
+
 }
 .content h2 {
     font-family: "Arial Black";
