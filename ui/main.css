@@ -29,8 +29,7 @@
     top: 0;
     height: 100%;
     pointer-events: none;
-    background:repeating-linear-gradient(180deg, rgba(40,40,40, 0),rgba(40,40,40, 0.08) 3px, rgba(40,40,40, 0) 3px,rgba(40,40,40, 0.08) 3px);
-    box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.2) inset, 1px 1px 6px 1px rgba(0,0,0,0.2);
+    background: repeating-linear-gradient(180deg, rgba(0,0,0, 0),rgba(0, 0, 0, 0.05) 4px, rgba(0,0,0, 0) 4px,rgba(0,0,0, 0.05) 4px);
     content:' ';
 }
 
