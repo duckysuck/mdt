@@ -9,7 +9,7 @@ A police Mobile Data Terminal system designed for use on the FiveM platform and 
 * Changed method to retrieve the player's name.
 * Can submit reports without adding charges.
 * Search the persons database using a phone number.
-* Added clientside +mdt command to trigger with `RegisterKeyMapping`.
+* Added clientside mdt command to trigger with `RegisterKeyMapping`. Removed serverside command.
 * Minor changes to the appearance of the mdt.
 <hr>
 <p align="center"><img src="https://i.imgur.com/EJ0a1yX.png"/>
