@@ -5,7 +5,7 @@ A police Mobile Data Terminal system designed for use on the FiveM platform and 
 ## Modifications
 * Support for EXM and ESX 1.2 without essentialsmode.
 * Support for the `users` database table. Use the included SQL file.
-* Added the sendNotification option to mdt:newCall. If false then calls will not trigger mythic_notify. [pushed to main repo]
+* Added the sendNotification option to mdt:newCall. If false then calls will not trigger mythic_notify.
 * Changed method to retrieve the player's name. [pushed to main repo]
 * Can submit reports without adding charges. [pushed to main repo]
 * Search the persons database using a phone number.
