@@ -4,6 +4,7 @@
     top: 10%;
     width: 80%;
     margin: auto;
+	color: #eceff1;
 }
 #banner {
     position: fixed;
@@ -29,7 +30,7 @@
     top: 0;
     height: 100%;
     pointer-events: none;
-    background: repeating-linear-gradient(180deg, rgba(0,0,0, 0),rgba(0, 0, 0, 0.05) 4px, rgba(0,0,0, 0) 4px,rgba(0,0,0, 0.05) 4px);
+    
     content:' ';
 }
 

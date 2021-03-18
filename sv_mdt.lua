@@ -31,13 +31,15 @@ AddEventHandler("mdt:getOffensesAndOfficer", function()
 	local charges = {}
 	MySQL.Async.fetchAll('SELECT * FROM fine_types', {
 	}, function(fines)
-		for j = 1, #fines do
-			if fines[j].category == 0 or fines[j].category == 1 or fines[j].category == 2 or fines[j].category == 3 then
-				table.insert(charges, fines[j])
+		if fines then
+			for j = 1, #fines do
+				if fines[j].category == 0 or fines[j].category == 1 or fines[j].category == 2 or fines[j].category == 3 then
+					table.insert(charges, fines[j])
+				end
 			end
-		end
 
-		local officer = GetCharacterName(usource)
+			local officer = GetCharacterName(usource)
+		end
 
 		TriggerClientEvent("mdt:returnOffensesAndOfficer", usource, charges, officer)
 	end)
@@ -47,16 +49,16 @@ RegisterServerEvent("mdt:performOffenderSearch")
 AddEventHandler("mdt:performOffenderSearch", function(query)
 	local usource = source
 	local matches = {}
-	MySQL.Async.fetchAll("SELECT * FROM `users` WHERE LOWER(`firstname`) LIKE @query OR LOWER(`lastname`) LIKE @query OR CONCAT(LOWER(`firstname`), ' ', LOWER(`lastname`)) LIKE @query OR `phone_number` LIKE @query2", {
-		['@query'] = string.lower('%'..query..'%'), -- % wildcard, needed to search for all alike results
-		['@query2'] = string.lower(query..'%')
+	MySQL.Async.fetchAll("SELECT * FROM `users` WHERE LOWER(`firstname`) LIKE @query OR LOWER(`lastname`) LIKE @query OR CONCAT(LOWER(`firstname`), ' ', LOWER(`lastname`)) LIKE @query", {
+		['@query'] = string.lower('%'..query..'%') -- % wildcard, needed to search for all alike results
 	}, function(result)
+		if result then
+			for index, data in ipairs(result) do
+				table.insert(matches, data)
+			end
 
-		for index, data in ipairs(result) do
-			table.insert(matches, data)
+			TriggerClientEvent("mdt:returnOffenderSearchResults", usource, matches)
 		end
-
-		TriggerClientEvent("mdt:returnOffenderSearchResults", usource, matches)
 	end)
 end)
 
@@ -99,31 +101,36 @@ AddEventHandler("mdt:getOffenderDetails", function(offender)
 	local phone_number = MySQL.Sync.fetchAll('SELECT `phone_number` FROM `users` WHERE `identifier` = @identifier', {
 		['@identifier'] = offender.identifier
 	})
-	offender.phone_number = phone_number[1].phone_number
-
+	
+	if phone_number[1] then
+		offender.phone_number = phone_number[1].phone_number
+	end
+	
 	local vehicles = MySQL.Sync.fetchAll('SELECT * FROM `owned_vehicles` WHERE `owner` = @identifier', {
 		['@identifier'] = offender.identifier
 	})
-	for i = 1, #vehicles do
-		vehicles[i].state, vehicles[i].stored, vehicles[i].job, vehicles[i].fourrieremecano, vehicles[i].vehiclename, vehicles[i].ownerName = nil
-		vehicles[i].vehicle = json.decode(vehicles[i].vehicle)
-		vehicles[i].model = vehicles[i].vehicle.model
-		if vehicles[i].vehicle.color1 then
-			if colors[tostring(vehicles[i].vehicle.color2)] and colors[tostring(vehicles[i].vehicle.color1)] then
-				vehicles[i].color = colors[tostring(vehicles[i].vehicle.color2)] .. " on " .. colors[tostring(vehicles[i].vehicle.color1)]
-			elseif colors[tostring(vehicles[i].vehicle.color1)] then
-				vehicles[i].color = colors[tostring(vehicles[i].vehicle.color1)]
-			elseif colors[tostring(vehicles[i].vehicle.color2)] then
-				vehicles[i].color = colors[tostring(vehicles[i].vehicle.color2)]
-			else
-				vehicles[i].color = "Unknown"
+	if vehicles then 
+		for i = 1, #vehicles do
+			vehicles[i].state, vehicles[i].stored, vehicles[i].job, vehicles[i].fourrieremecano, vehicles[i].vehiclename, vehicles[i].ownerName = nil
+			vehicles[i].vehicle = json.decode(vehicles[i].vehicle)
+			vehicles[i].model = vehicles[i].vehicle.model
+			if vehicles[i].vehicle.color1 then
+				if colors[tostring(vehicles[i].vehicle.color2)] and colors[tostring(vehicles[i].vehicle.color1)] then
+					vehicles[i].color = colors[tostring(vehicles[i].vehicle.color2)] .. " on " .. colors[tostring(vehicles[i].vehicle.color1)]
+				elseif colors[tostring(vehicles[i].vehicle.color1)] then
+					vehicles[i].color = colors[tostring(vehicles[i].vehicle.color1)]
+				elseif colors[tostring(vehicles[i].vehicle.color2)] then
+					vehicles[i].color = colors[tostring(vehicles[i].vehicle.color2)]
+				else
+					vehicles[i].color = "Unknown"
+				end
 			end
+			vehicles[i].vehicle = nil
 		end
-		vehicles[i].vehicle = nil
-	end
-	offender.vehicles = vehicles
+		offender.vehicles = vehicles
 
-	TriggerClientEvent("mdt:returnOffenderDetails", usource, offender)
+		TriggerClientEvent("mdt:returnOffenderDetails", usource, offender)
+	end
 end)
 
 RegisterServerEvent("mdt:getOffenderDetailsById")
@@ -320,13 +327,14 @@ AddEventHandler("mdt:performReportSearch", function(query)
 	MySQL.Async.fetchAll("SELECT * FROM `mdt_reports` WHERE `id` LIKE @query OR LOWER(`title`) LIKE @query OR LOWER(`name`) LIKE @query OR LOWER(`author`) LIKE @query or LOWER(`charges`) LIKE @query", {
 		['@query'] = string.lower('%'..query..'%') -- % wildcard, needed to search for all alike results
 	}, function(result)
+		if result then
+			for index, data in ipairs(result) do
+				data.charges = json.decode(data.charges)
+				table.insert(matches, data)
+			end
 
-		for index, data in ipairs(result) do
-			data.charges = json.decode(data.charges)
-			table.insert(matches, data)
+			TriggerClientEvent("mdt:returnReportSearchResults", usource, matches)
 		end
-
-		TriggerClientEvent("mdt:returnReportSearchResults", usource, matches)
 	end)
 end)
 
@@ -593,12 +601,15 @@ function GetLicenses(identifier, cb)
 					MySQL.Async.fetchAll('SELECT * FROM licenses WHERE type = @type', {
 						['@type'] = type
 					}, function(result2)
-						table.insert(licenses, {
-							type  = type,
-							label = result2[1].label
-						})
-
-						cb()
+					print(result2[1].label)
+						if result2 then
+							table.insert(licenses, {
+								type  = type,
+								label = result2[1].label
+							})
+							
+							cb()
+						end
 					end)
 				end)
 			end

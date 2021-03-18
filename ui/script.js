@@ -706,8 +706,9 @@ document.onkeydown = function (data) {
         $.post('http://mdt/close', JSON.stringify({}));
     } else if (data.which == 13) { // enter
         /* stop enter key from crashing MDT in an input?  */
-        var textarea = document.getElementsByTagName('textarea');
-        if (!$(textarea).is(':focus')) {
+		console.log('Enter Pressed!')
+        var input = document.getElementsByTagName('input');
+        if (!$(input).is(':focus')) {
             return false;
         }
     }

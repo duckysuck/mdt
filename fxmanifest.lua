@@ -8,13 +8,13 @@ ui_page "ui/index.html"
 
 files {
     "ui/index.html",
-    "ui/vue.min.js",
+    "ui/bootstrap.css",
     "ui/script.js",
     "ui/main.css",
     "ui/styles/police.css",
     "ui/badges/police.png",
     "ui/footer.png",
-    "ui/mugshot.png"
+    "ui/mugshot.png",
 }
 
 server_scripts {

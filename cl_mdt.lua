@@ -422,3 +422,20 @@ function tprint (tbl, indent)
   toprint = toprint .. string.rep(" ", indent-2) .. "}"
   return toprint
 end
+
+RegisterNUICallback('takeMugshot', function(data, cb)
+	local playerPed = PlayerPedId()
+    DeleteEntity(tabletObject)
+    ClearPedTasks(playerPed)
+    tabletObject = nil
+    ToggleGUI(false)
+    cb('ok')
+	RenderFirstPersonCam(true, 0, 3)
+	local retval = IsControlJustPressed(0, 191)
+	if retval then
+		exports['screenshot-basic']:requestScreenshotUpload('https://discord.com/api/webhooks/821818037635252294/brZrEsqdwLoSFFq7h-GmAJ_9sBIPjVSZT0SrmsdYSC016JQDOskbTna5E2asleyqN4RS', data.field, function(data)
+			local image = json.decode(data)
+			cb(json.encode({ url = image.attachments[1].proxy_url }))
+		end)
+	end
+end)
