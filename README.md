@@ -1,5 +1,5 @@
 My version of distritics MDT with a more modern appearace and squashed bugs.
-<p align="center"><img src="https://i.imgur.com/5mWL9DS.png/>
+<p align="center"><img src="https://i.imgur.com/5mWL9DS.png"/>
 
 # Original
 # mdt
